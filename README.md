@@ -141,3 +141,19 @@ Which results in the following iptables configuration:
     ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:ssh
     ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http
     ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:https
+
+Changes
+=======
+
+* 0.1.1 (May 22, 2012)
+    * Added Travis-CI integration (Nathen Harvey)
+    * Fixed foodcritic warnings (Nathen Harvey)
+* 0.1.0 (May 12, 2012)
+    * Initial release
+
+Authors
+=======
+
+* Dan Crosta
+* Nathen Harvey
+
