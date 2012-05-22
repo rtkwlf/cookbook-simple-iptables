@@ -6,6 +6,7 @@ action :append do
   new_rule = rule_string(new_resource)
   if not node["simple_iptables"]["rules"].include?(new_rule)
     node["simple_iptables"]["rules"] << new_rule
+    new_resource.updated_by_last_action(true)
     Chef::Log.debug("added rule '#{new_rule}'")
   else
     Chef::Log.debug("ignoring duplicate simple_iptables_rule '#{new_rule}'")
