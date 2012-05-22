@@ -1,4 +1,4 @@
-# <a name="title"></a> cookbook-simple-iptables [![Build Status](https://secure.travis-ci.org/nathenharvey/cookbook-simple-iptables.png?branch=initial_tests)](http://travis-ci.org/nathenharvey/cookbook-simple-iptables)
+[![Build Status](https://secure.travis-ci.org/dcrosta/cookbook-simple-iptables.png?branch=master)](http://travis-ci.org/dcrosta/cookbook-simple-iptables)
 
 Description
 ===========
