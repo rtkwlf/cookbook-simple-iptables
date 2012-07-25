@@ -145,6 +145,8 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.1.2 (July 24, 2012)
+    * Fixed examples in README (SchraderMJ11)
 * 0.1.1 (May 22, 2012)
     * Added Travis-CI integration (Nathen Harvey)
     * Fixed foodcritic warnings (Nathen Harvey)
