@@ -82,25 +82,25 @@ Suppose you had the following `simple_iptables` configuration:
 
     # Allow any established connections to continue, even
     # if they would be in violation of other rules.
-    iptables_rule "system" do
+    simple_iptables_rule "system" do
       rule "-m conntrack --ctstate ESTABLISHED,RELATED"
       jump "ACCEPT"
     end
 
     # Allow SSH
-    iptables_rule "system" do
+    simple_iptables_rule "system" do
       rule "--proto tcp --dport 22"
       jump "ACCEPT"
     end
 
     # Allow HTTP
-    iptables_rule "system" do
+    simple_iptables_rule "system" do
       rule "--proto tcp --dport 80"
       jump "ACCEPT"
     end
 
     # And HTTPS
-    iptables_rule "system" do
+    simple_iptables_rule "system" do
       rule "--proto tcp --dport 443"
       jump "ACCEPT"
     end
