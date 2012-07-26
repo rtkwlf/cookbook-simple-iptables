@@ -65,12 +65,24 @@ execute "reload-iptables" do
   action :nothing
 end
 
-# TODO: Generalize this for other platforms somehow
-file "/etc/network/if-up.d/iptables-rules" do
-  owner "root"
-  group "root"
-  mode "0755"
-  content "#!/bin/bash\niptables-restore < /etc/iptables-rules\n"
-  action :create
+
+case node.platform_family
+when 'debian'
+
+  # TODO: Generalize this for other platforms somehow
+  file "/etc/network/if-up.d/iptables-rules" do
+    owner "root"
+    group "root"
+    mode "0755"
+    content "#!/bin/bash\niptables-restore < /etc/iptables-rules\n"
+    action :create
+  end
+when 'rhel'
+
+  execute "save-iptables" do
+    command "/etc/init.d/iptables save"
+    user "root"
+    action :run
+  end
 end
 
