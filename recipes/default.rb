@@ -47,7 +47,14 @@ ruby_block "run-iptables-resources-early" do
   end
 end
 
-template "/etc/iptables-rules" do
+case node.platform_family
+when 'debian'
+  iptable_rules = '/etc/iptables-rules'
+when 'rhel'
+  iptable_rules = '/etc/sysconfig/iptables'
+end
+
+template iptable_rules do
   source "iptables-rules.erb"
   cookbook "simple_iptables"
   variables(
@@ -76,13 +83,6 @@ when 'debian'
     mode "0755"
     content "#!/bin/bash\niptables-restore < /etc/iptables-rules\n"
     action :create
-  end
-when 'rhel'
-
-  execute "save-iptables" do
-    command "/etc/init.d/iptables save"
-    user "root"
-    action :run
   end
 end
 
