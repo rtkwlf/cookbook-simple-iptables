@@ -54,6 +54,12 @@ when 'rhel'
   iptable_rules = '/etc/sysconfig/iptables'
 end
 
+execute "reload-iptables" do
+  command "iptables-restore < #{iptable_rules}"
+  user "root"
+  action :nothing
+end
+
 template iptable_rules do
   source "iptables-rules.erb"
   cookbook "simple_iptables"
@@ -65,13 +71,6 @@ template iptable_rules do
   notifies :run, "execute[reload-iptables]"
   action :create
 end
-
-execute "reload-iptables" do
-  command "iptables-restore < #{iptable_rules}"
-  user "root"
-  action :nothing
-end
-
 
 case node.platform_family
 when 'debian'
