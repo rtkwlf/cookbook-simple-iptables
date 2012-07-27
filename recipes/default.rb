@@ -70,9 +70,6 @@ template iptable_rules do
   )
   notifies :run, "execute[reload-iptables]"
   action :create
-  if ::File.exists?(iptable_rules)
-      notifies :run, "execute[reload-iptables]"
-  end
 end
 
 case node.platform_family
