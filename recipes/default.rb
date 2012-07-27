@@ -67,7 +67,7 @@ template iptable_rules do
 end
 
 execute "reload-iptables" do
-  command "iptables-restore < /etc/iptables-rules"
+  command "iptables-restore < #{iptables_rules}"
   user "root"
   action :nothing
 end
@@ -81,7 +81,7 @@ when 'debian'
     owner "root"
     group "root"
     mode "0755"
-    content "#!/bin/bash\niptables-restore < /etc/iptables-rules\n"
+    content "#!/bin/bash\niptables-restore < #{iptables_rules}\n"
     action :create
   end
 end
