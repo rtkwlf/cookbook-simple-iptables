@@ -47,7 +47,7 @@ ruby_block "run-iptables-resources-early" do
   end
 end
 
-template "/etc/iptables-rules" do
+template "/etc/iptables-rules.tmp" do
   source "iptables-rules.erb"
   cookbook "simple_iptables"
   variables(
@@ -60,7 +60,7 @@ template "/etc/iptables-rules" do
 end
 
 execute "reload-iptables" do
-  command "iptables-restore < /etc/iptables-rules"
+  command "iptables-restore < /etc/iptables-rules.tmp && cp /etc/iptables-rules.tmp /etc/iptables-rules || (mv /etc/iptables-rules.tmp /etc/iptables-rules.failed; false)"
   user "root"
   action :nothing
 end
