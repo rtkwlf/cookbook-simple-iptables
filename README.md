@@ -47,6 +47,15 @@ instance:
       jump "ACCEPT"
     end
 
+For convenience, you may also specify an array of rule strings in a single
+LWRP invocation:
+
+    # Allow HTTP, HTTPS
+    simple_iptables_rule "http" do
+      rule [ "--proto tcp --dport 80",
+             "--proto tcp --dport 443" ]
+      jump "ACCEPT"
+    end
 
 `simple_iptables_policy` Resource
 ---------------------------------
@@ -93,17 +102,13 @@ Suppose you had the following `simple_iptables` configuration:
       jump "ACCEPT"
     end
 
-    # Allow HTTP
-    simple_iptables_rule "system" do
-      rule "--proto tcp --dport 80"
+    # Allow HTTP, HTTPS
+    simple_iptables_rule "http" do
+      rule [ "--proto tcp --dport 80",
+             "--proto tcp --dport 443" ]
       jump "ACCEPT"
     end
 
-    # And HTTPS
-    simple_iptables_rule "system" do
-      rule "--proto tcp --dport 443"
-      jump "ACCEPT"
-    end
 
 This would generate a file `/etc/iptables-rules` with the contents:
 
@@ -145,6 +150,8 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.2.0 (Aug 1, 2012)
+    * Allow an array of rules in `simple_iptables_rule` LWRP (Johannes Becker)
 * 0.1.2 (July 24, 2012)
     * Fixed examples in README (SchraderMJ11)
 * 0.1.1 (May 22, 2012)
