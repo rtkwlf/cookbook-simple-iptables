@@ -47,7 +47,20 @@ ruby_block "run-iptables-resources-early" do
   end
 end
 
-template "/etc/iptables-rules" do
+case node.platform_family
+when 'debian'
+  iptable_rules = '/etc/iptables-rules'
+when 'rhel'
+  iptable_rules = '/etc/sysconfig/iptables'
+end
+
+execute "reload-iptables" do
+  command "iptables-restore < #{iptable_rules}"
+  user "root"
+  action :nothing
+end
+
+template iptable_rules do
   source "iptables-rules.erb"
   cookbook "simple_iptables"
   variables(
@@ -59,18 +72,16 @@ template "/etc/iptables-rules" do
   action :create
 end
 
-execute "reload-iptables" do
-  command "iptables-restore < /etc/iptables-rules"
-  user "root"
-  action :nothing
-end
+case node.platform_family
+when 'debian'
 
-# TODO: Generalize this for other platforms somehow
-file "/etc/network/if-up.d/iptables-rules" do
-  owner "root"
-  group "root"
-  mode "0755"
-  content "#!/bin/bash\niptables-restore < /etc/iptables-rules\n"
-  action :create
+  # TODO: Generalize this for other platforms somehow
+  file "/etc/network/if-up.d/iptables-rules" do
+    owner "root"
+    group "root"
+    mode "0755"
+    content "#!/bin/bash\niptables-restore < #{iptable_rules}\n"
+    action :create
+  end
 end
 
