@@ -160,9 +160,3 @@ Changes
 * 0.1.0 (May 12, 2012)
     * Initial release
 
-Authors
-=======
-
-* Dan Crosta
-* Nathen Harvey
-
