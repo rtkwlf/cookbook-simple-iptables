@@ -1,6 +1,18 @@
 #!/usr/bin/env rake
 
+require 'json'
+
 task :default => 'foodcritic'
+
+desc "Creates a tarball for distribution to the community site"
+task :tarball do
+  Rake::Task[:foodcritic].execute
+  Rake::Task[:knife].execute
+
+  version = JSON.parse(File.read('metadata.json'))["version"]
+  sh "knife cookbook metadata simple_iptables"
+  sh "tar czvf simple_iptables-#{version}.tar.gz -C .. --exclude '*.tar.gz' --exclude '.git*' --exclude '.*.swp' --exclude tmp --exclude test --exclude .travis.yml --exclude Gemfile.lock simple_iptables"
+end
 
 desc "Runs foodcritic linter"
 task :foodcritic do
