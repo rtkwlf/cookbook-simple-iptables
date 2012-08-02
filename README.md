@@ -158,6 +158,7 @@ Changes
 * 0.2.0 (Aug 1, 2012)
     * Allow an array of rules in `simple_iptables_rule` LWRP (Johannes Becker)
     * RedHat/CentOS compatibility (David Stainton)
+    * Failing `simple_iptables_rule`s now fail with a more helpful error message
 * 0.1.2 (July 24, 2012)
     * Fixed examples in README (SchraderMJ11)
 * 0.1.1 (May 22, 2012)
