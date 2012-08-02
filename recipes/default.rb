@@ -47,7 +47,7 @@ ruby_block "run-iptables-resources-early" do
   end
 end
 
-case node.platform_family
+case node['platform_family']
 when 'debian'
   iptable_rules = '/etc/iptables-rules'
 when 'rhel'
@@ -72,7 +72,7 @@ template iptable_rules do
   action :create
 end
 
-case node.platform_family
+case node['platform_family']
 when 'debian'
 
   # TODO: Generalize this for other platforms somehow
