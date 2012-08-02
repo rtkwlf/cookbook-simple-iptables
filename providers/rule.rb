@@ -5,7 +5,7 @@ action :append do
   end
 
   if new_resource.rule.kind_of?(String)
-    rules = [new_resource.rule] 
+    rules = [new_resource.rule]
   else
     rules = new_resource.rule
   end
