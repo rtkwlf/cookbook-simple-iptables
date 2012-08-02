@@ -14,10 +14,15 @@ None, other than a system that supports iptables.
 Platforms
 =========
 
-The cookbook is tested and works on Debian 6.0 and later. It may also work
-on other platforms, but the templates are set up for Debian SysV init-type
-systems. Contributions to support other platforms are gladly welcomed.
+The following platforms are supported and known to work:
 
+* Debian (6.0 and later)
+* RedHat (5.8 and later)
+* CentOS (5.8 and later)
+
+Other platforms that support `iptables` and the `iptables-restore` script
+are likely to work as well; if you use one, please let me know so that I can
+update the supported platforms list.
 
 Attributes
 ==========
@@ -152,6 +157,7 @@ Changes
 
 * 0.2.0 (Aug 1, 2012)
     * Allow an array of rules in `simple_iptables_rule` LWRP (Johannes Becker)
+    * RedHat/CentOS compatibility (David Stainton)
 * 0.1.2 (July 24, 2012)
     * Fixed examples in README (SchraderMJ11)
 * 0.1.1 (May 22, 2012)
