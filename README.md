@@ -155,6 +155,8 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.2.1 (Aug 5, 2012)
+    * Fixed a bug using `simple_iptables` with chef-solo (#5)
 * 0.2.0 (Aug 1, 2012)
     * Allow an array of rules in `simple_iptables_rule` LWRP (Johannes Becker)
     * RedHat/CentOS compatibility (David Stainton)
