@@ -2,7 +2,9 @@
 
 require 'json'
 
-task :default => 'foodcritic'
+task :default => 'test'
+
+task :test => [:foodcritic, :knife]
 
 desc "Creates a tarball for distribution to the community site"
 task :tarball do
