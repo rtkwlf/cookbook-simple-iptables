@@ -63,11 +63,6 @@ end
 template iptable_rules do
   source "iptables-rules.erb"
   cookbook "simple_iptables"
-  variables(
-    "policy" => node["simple_iptables"]["policy"],
-    "chains" => node["simple_iptables"]["chains"],
-    "rules" => node["simple_iptables"]["rules"]
-  )
   notifies :run, "execute[reload-iptables]"
   action :create
 end
