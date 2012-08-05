@@ -11,9 +11,19 @@ task :tarball do
   Rake::Task[:foodcritic].execute
   Rake::Task[:knife].execute
 
-  version = JSON.parse(File.read('metadata.json'))["version"]
   sh "knife cookbook metadata simple_iptables"
-  sh "tar czvf simple_iptables-#{version}.tar.gz -C .. --exclude '*.tar.gz' --exclude '.git*' --exclude '.*.swp' --exclude tmp --exclude test --exclude .travis.yml --exclude Gemfile.lock simple_iptables"
+  version = JSON.parse(File.read('metadata.json'))["version"]
+
+  never_package = [
+    ".gitignore",
+    ".travis.yml"
+  ]
+
+  files = `git ls-files`.split << "metadata.json"
+  files.reject! {|file| never_package.include?(file)}
+  files.map! {|file| "simple_iptables/#{file}"}
+
+  sh "tar czvf simple_iptables-#{version}.tar.gz -C .. #{files.join(' ')}"
 end
 
 desc "Runs foodcritic linter"
