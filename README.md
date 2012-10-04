@@ -62,6 +62,14 @@ LWRP invocation:
       jump "ACCEPT"
     end
 
+Additionally, if you want to declare a module (such as log) you can define jump as nil:
+
+    # Log
+    simple_iptables_rule "system" do
+      rule "--match limit --limit 5/min --jump LOG --log-prefix \"iptables denied: \" --log-level 7"
+      jump nil
+    end
+
 `simple_iptables_policy` Resource
 ---------------------------------
 
