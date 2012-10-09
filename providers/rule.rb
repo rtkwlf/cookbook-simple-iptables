@@ -2,7 +2,13 @@ require 'chef/mixin/shell_out'
 include Chef::Mixin::ShellOut
 
 action :append do
-  test_rules(new_resource)
+  if new_resource.rule.kind_of?(String)
+    rules = [new_resource.rule]
+  else
+    rules = new_resource.rule
+  end
+
+  test_rules(new_resource, rules)
 
   if not node["simple_iptables"]["chains"].include?(new_resource.chain)
     node["simple_iptables"]["chains"] << new_resource.chain
@@ -10,7 +16,7 @@ action :append do
   end
 
   # Then apply the rules to the node
-  Array(new_resource.rule).each do |rule|
+  rules.each do |rule|
     new_rule = rule_string(new_resource, rule)
     if not node["simple_iptables"]["rules"].include?(new_rule)
       node["simple_iptables"]["rules"] << new_rule
@@ -22,10 +28,10 @@ action :append do
   end
 end
 
-def test_rules(new_resource)
+def test_rules(new_resource, rules)
   shell_out!("iptables --new-chain _chef_lwrp_test")
   begin
-    Array(new_resource.rule).each do |rule|
+    rules.each do |rule|
       new_rule = rule_string(new_resource, rule)
       new_rule.gsub!("-A #{new_resource.chain}", "-A _chef_lwrp_test")
       shell_out!("iptables #{new_rule}")

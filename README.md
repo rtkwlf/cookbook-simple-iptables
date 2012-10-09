@@ -62,7 +62,7 @@ LWRP invocation:
       jump "ACCEPT"
     end
 
-Additionally, if you want to declare a module (such as log) you can define jump as nil:
+Additionally, if you want to declare a module (such as log) you can define jump as false:
 
     # Log
     simple_iptables_rule "system" do
