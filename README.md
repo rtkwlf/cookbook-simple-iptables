@@ -163,6 +163,8 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.2.2 (Oct 13, 2012)
+    * Added support for logging module and other non-jump rules (#6 - phoolish)
 * 0.2.1 (Aug 5, 2012)
     * Fixed a bug using `simple_iptables` with chef-solo (#5)
 * 0.2.0 (Aug 1, 2012)
