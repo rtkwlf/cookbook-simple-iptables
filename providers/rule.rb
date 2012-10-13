@@ -43,6 +43,7 @@ def test_rules(new_resource, rules)
 end
 
 def rule_string(new_resource, rule)
-  rule = "-A #{new_resource.chain} #{rule} --jump #{new_resource.jump}"
+  jump = new_resource.jump ? " --jump #{new_resource.jump}" : ""
+  rule = "-A #{new_resource.chain} #{rule}#{jump}"
   rule
 end
