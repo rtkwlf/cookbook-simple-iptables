@@ -163,6 +163,8 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.2.3 (Nov 10, 2012)
+    * Fixed a warning in Chef 11+ (#7 - Hector Castro)
 * 0.2.2 (Oct 13, 2012)
     * Added support for logging module and other non-jump rules (#6 - phoolish)
 * 0.2.1 (Aug 5, 2012)
