@@ -1,3 +1,4 @@
+name             "simple_iptables"
 maintainer       "Dan Crosta"
 maintainer_email "dcrosta@late.am"
 license          "BSD"
