@@ -11,15 +11,15 @@ action :append do
   test_rules(new_resource, rules)
 
   if not node["simple_iptables"]["chains"].include?(new_resource.chain)
-    node["simple_iptables"]["chains"] << new_resource.chain
-    node["simple_iptables"]["rules"] << "-A #{new_resource.direction} --jump #{new_resource.chain}"
+    node.default["simple_iptables"]["chains"] << new_resource.chain
+    node.default["simple_iptables"]["rules"] << "-A #{new_resource.direction} --jump #{new_resource.chain}"
   end
 
   # Then apply the rules to the node
   rules.each do |rule|
     new_rule = rule_string(new_resource, rule)
     if not node["simple_iptables"]["rules"].include?(new_rule)
-      node["simple_iptables"]["rules"] << new_rule
+      node.default["simple_iptables"]["rules"] << new_rule
       new_resource.updated_by_last_action(true)
       Chef::Log.debug("added rule '#{new_rule}'")
     else
