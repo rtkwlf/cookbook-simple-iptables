@@ -163,6 +163,9 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.2.4 (Feb 13, 2013)
+    * Fixed attribute precedence issues in Chef 11 (#9 - Warwick Poole)
+    * Added `name` to metadata to satisfy recent foodcritic versions
 * 0.2.3 (Nov 10, 2012)
     * Fixed a warning in Chef 11+ (#7 - Hector Castro)
 * 0.2.2 (Oct 13, 2012)
