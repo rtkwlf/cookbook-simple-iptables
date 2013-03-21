@@ -36,10 +36,18 @@ ruby_block "run-iptables-resources-early" do
     run_context.resource_collection.each do |resource|
       if resource.kind_of?(Chef::Resource::SimpleIptablesRule)
         Chef::Log.debug("about to run simple_iptables_rule[#{resource.chain}]")
-        resource.run_action(resource.action)
+        if resource.action.kind_of?(Array)
+          resource.run_action(resource.action.first)
+        else
+          resource.run_action(resource.action)
+        end
       elsif resource.kind_of?(Chef::Resource::SimpleIptablesPolicy)
         Chef::Log.debug("about to run simple_iptables_policy[#{resource.chain}]")
-        resource.run_action(resource.action)
+        if resource.action.kind_of?(Array)
+          resource.run_action(resource.action.first)
+        else
+          resource.run_action(resource.action)
+        end
       end
     end
 
