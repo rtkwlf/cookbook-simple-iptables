@@ -1,4 +1,4 @@
-actions :append
+actions :append, :delete
 
 attribute :chain, :name_attribute => true, :kind_of => String
 attribute :table, :equal_to => ["filter", "nat"], :default => "filter"

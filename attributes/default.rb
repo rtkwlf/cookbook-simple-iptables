@@ -1,6 +1,4 @@
-default["simple_iptables"]["rules"]["filter"] = []
-default["simple_iptables"]["rules"]["nat"] = []
-default["simple_iptables"]["chains"]["filter"] = []
-default["simple_iptables"]["chains"]["nat"] = []
-default["simple_iptables"]["policy"]["filter"] = {}
-default["simple_iptables"]["policy"]["nat"] = {}
+default["simple_iptables"]["filter"]["chains"] = {}
+default["simple_iptables"]["nat"]["chains"] = {}
+default["simple_iptables"]["filter"]["policy"] = {}
+default["simple_iptables"]["nat"]["policy"] = {}
