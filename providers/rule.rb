@@ -29,6 +29,10 @@ action :append do
 end
 
 def test_rules(new_resource, rules)
+  #always flush and remove first in case the previous run left it lying around. Ignore any return values.
+  shell_out("iptables --table #{new_resource.table} --flush _chef_lwrp_test")
+  shell_out("iptables --table #{new_resource.table} --delete-chain _chef_lwrp_test")
+  #create the test chain
   shell_out!("iptables --table #{new_resource.table} --new-chain _chef_lwrp_test")
   begin
     rules.each do |rule|
