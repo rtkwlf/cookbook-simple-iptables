@@ -43,8 +43,8 @@ def test_rules(new_resource, rules)
 end
 
 def rule_string(new_resource, rule, include_table)
-  jump = new_resource.jump ? " --jump #{new_resource.jump}" : ""
+  jump = new_resource.jump ? "--jump #{new_resource.jump} " : ""
   table = include_table ? "--table #{new_resource.table} " : ""
-  rule = "#{table}-A #{new_resource.chain} #{rule}#{jump}"
+  rule = "#{table}-A #{new_resource.chain} #{jump}#{rule}"
   rule
 end
