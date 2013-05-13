@@ -5,7 +5,9 @@
 :OUTPUT <%= node["simple_iptables"]["policy"]["nat"]["OUTPUT"] || "ACCEPT" %> [0:0]
 :POSTROUTING <%= node["simple_iptables"]["policy"]["nat"]["POSTROUTING"] || "ACCEPT" %> [0:0]
 <% node["simple_iptables"]["chains"]["nat"].each do |chain| -%>
+<% unless ["PREROUTING", "INPUT", "OUTPUT", "POSTROUTING"].include?(chain) -%>
 :<%= chain %> - [0:0]
+<% end -%>
 <% end -%>
 <% node["simple_iptables"]["rules"]["nat"].each do |rule| -%>
 <%= rule %>
@@ -18,11 +20,12 @@ COMMIT
 :FORWARD <%= node["simple_iptables"]["policy"]["filter"]["FORWARD"] || "ACCEPT" %> [0:0]
 :OUTPUT <%= node["simple_iptables"]["policy"]["filter"]["OUTPUT"] || "ACCEPT" %> [0:0]
 <% node["simple_iptables"]["chains"]["filter"].each do |chain| -%>
+<% unless ["INPUT", "FORWARD", "OUTPUT"].include?(chain) -%>
 :<%= chain %> - [0:0]
+<% end -%>
 <% end -%>
 <% node["simple_iptables"]["rules"]["filter"].each do |rule| -%>
 <%= rule %>
 <% end -%>
 COMMIT
 # Completed
-
