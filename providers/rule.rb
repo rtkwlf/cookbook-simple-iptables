@@ -29,16 +29,26 @@ action :append do
 end
 
 def test_rules(new_resource, rules)
-  shell_out!("iptables --table #{new_resource.table} --new-chain _chef_lwrp_test")
+  test_chains = ["_chef_lwrp_test1"]
+  shell_out!("iptables --table #{new_resource.table} --new-chain #{test_chains.first}")
   begin
     rules.each do |rule|
       new_rule = rule_string(new_resource, rule, true)
-      new_rule.gsub!("-A #{new_resource.chain}", "-A _chef_lwrp_test")
+      new_rule.gsub!("-A #{new_resource.chain}", "-A #{test_chains.first}")
+
+      # Test for jumps to chains that are not actually created on the system, but are already processed in the current recipe
+      if node["simple_iptables"]["chains"][new_resource.table].include?(new_resource.jump)
+        test_chains.push("_chef_lwrp_test2")
+        shell_out!("iptables --table #{new_resource.table} --new-chain #{test_chains.last}")
+        new_rule.gsub!("--jump #{new_resource.jump}", "--jump #{test_chains.last}")
+      end
       shell_out!("iptables #{new_rule}")
     end
   ensure
-    shell_out("iptables --table #{new_resource.table} --flush _chef_lwrp_test")
-    shell_out("iptables --table #{new_resource.table} --delete-chain _chef_lwrp_test")
+    test_chains.each do |test_chain|
+      shell_out("iptables --table #{new_resource.table} --flush #{test_chain}")
+      shell_out("iptables --table #{new_resource.table} --delete-chain #{test_chain}")
+    end
   end
 end
 
