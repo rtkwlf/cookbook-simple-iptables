@@ -11,7 +11,7 @@ action :append do
   test_rules(new_resource, rules)
 
   if not node["simple_iptables"]["chains"][new_resource.table].include?(new_resource.chain)
-    node.set["simple_iptables"]["chains"][new_resource.table] = node["simple_iptables"]["chains"][new_resource.table].dup << new_resource.chain
+    node.set["simple_iptables"]["chains"][new_resource.table] = node["simple_iptables"]["chains"][new_resource.table].dup << new_resource.chain unless ["PREROUTING", "INPUT", "FORWARD", "OUTPUT", "POSTROUTING"].include?(new_resource.chain)
     node.set["simple_iptables"]["rules"][new_resource.table] = node["simple_iptables"]["rules"][new_resource.table].dup << "-A #{new_resource.direction} --jump #{new_resource.chain}"
   end
 
