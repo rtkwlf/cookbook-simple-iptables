@@ -137,8 +137,8 @@ Suppose you had the following `simple_iptables` configuration:
     
     # Allow HTTP, HTTPS
     simple_iptables_rule "http" do
-      rule [ "--proto tcp --dport 80",
-             "--proto tcp --dport 443" ]
+      rule [ "--proto tcp --dport 8080",
+             "--proto tcp --dport 8443" ]
       jump "ACCEPT"
     end
     
@@ -177,8 +177,8 @@ This would generate a file `/etc/iptables-rules` with the contents:
     -A system -m conntrack --ctstate ESTABLISHED,RELATED --jump ACCEPT
     -A system --proto tcp --dport 22 --jump ACCEPT
     -A INPUT --jump http
-    -A http --proto tcp --dport 80 --jump ACCEPT
-    -A http --proto tcp --dport 443 --jump ACCEPT
+    -A http --proto tcp --dport 8080 --jump ACCEPT
+    -A http --proto tcp --dport 8443 --jump ACCEPT
     COMMIT
     # Completed
 
@@ -198,8 +198,8 @@ Which results in the following iptables configuration:
     
     Chain http (1 references)
     target     prot opt source               destination         
-    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http
-    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:https
+    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:8080
+    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:8443
     
     Chain system (1 references)
     target     prot opt source               destination         
