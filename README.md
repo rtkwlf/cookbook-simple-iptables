@@ -57,8 +57,8 @@ LWRP invocation:
 
     # Allow HTTP, HTTPS
     simple_iptables_rule "http" do
-      rule [ "--proto tcp --dport 80",
-             "--proto tcp --dport 443" ]
+      rule ["--proto tcp --dport 80",
+            "--proto tcp --dport 443"]
       jump "ACCEPT"
     end
 
@@ -76,8 +76,8 @@ By default rules are added to the filter table but the nat table is also support
     simple_iptables_rule "tomcat" do
       table "nat"
       direction "PREROUTING"
-      rule [ "--protocol tcp --dport 80 --jump REDIRECT --to-port 8080",
-             "--protocol tcp --dport 443 --jump REDIRECT --to-port 8443" ]
+      rule ["--protocol tcp --dport 80 --jump REDIRECT --to-port 8080",
+            "--protocol tcp --dport 443 --jump REDIRECT --to-port 8443"]
       jump false
     end
 
@@ -138,7 +138,7 @@ Suppose you had the following `simple_iptables` configuration:
     # Allow HTTP, HTTPS
     simple_iptables_rule "http" do
       rule [ "--proto tcp --dport 80",
-             "--proto tcp --dport 443" ]
+             "--proto tcp --dport 443"]
       jump "ACCEPT"
     end
     
@@ -146,8 +146,8 @@ Suppose you had the following `simple_iptables` configuration:
     simple_iptables_rule "tomcat" do
       table "nat"
       direction "PREROUTING"
-      rule [ "--protocol tcp --dport 80 --jump REDIRECT --to-port 8080",
-             "--protocol tcp --dport 443 --jump REDIRECT --to-port 8443" ]
+      rule ["--protocol tcp --dport 80 --jump REDIRECT --to-port 8080",
+            "--protocol tcp --dport 443 --jump REDIRECT --to-port 8443"]
       jump false
     end
 
