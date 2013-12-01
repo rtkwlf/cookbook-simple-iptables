@@ -80,6 +80,29 @@ By default rules are added to the filter table but the nat table is also support
       jump false
     end
 
+The mangle table is also supported. For example, perhaps you want to block external access to ports 8080 and 8443. One way to do this is to set a netfilter mark by using the [mangle table]
+
+    simple_iptables_rule "tomcat" do
+      table "mangle"
+      direction "PREROUTING"
+      rule ["--proto tcp --dport 8080 --jump MARK --set-mark 0x1",
+            "--proto tcp --dport 8443 --jump MARK --set-mark 0x1"]
+      jump false
+    end
+
+Then, to drop packets with that particular mark, use:
+
+    simple_iptables_rule "tomcat" do
+      table "filter"
+      direction "INPUT"
+      rule "--match mark --mark 0x1"
+      jump "DROP"
+    end
+
+This example states `table` and `direction` explicitly. You might prefer to omit them; the default values are the same.
+
+[mangle table]: http://www.faqs.org/docs/iptables/mangletable.html
+
 `simple_iptables_policy` Resource
 ---------------------------------
 
