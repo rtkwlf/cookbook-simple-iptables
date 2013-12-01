@@ -10,7 +10,6 @@ Requirements
 
 None, other than a system that supports iptables.
 
-
 Platforms
 =========
 
@@ -111,37 +110,37 @@ Suppose you had the following `simple_iptables` configuration:
     simple_iptables_policy "INPUT" do
       policy "DROP"
     end
-    
+
     # The following rules define a "system" chain; chains
     # are used as a convenient way of grouping rules together,
     # for logical organization.
-    
+
     # Allow all traffic on the loopback device
     simple_iptables_rule "system" do
       rule "--in-interface lo"
       jump "ACCEPT"
     end
-    
+
     # Allow any established connections to continue, even
     # if they would be in violation of other rules.
     simple_iptables_rule "system" do
       rule "-m conntrack --ctstate ESTABLISHED,RELATED"
       jump "ACCEPT"
     end
-    
+
     # Allow SSH
     simple_iptables_rule "system" do
       rule "--proto tcp --dport 22"
       jump "ACCEPT"
     end
-    
+
     # Allow HTTP, HTTPS
     simple_iptables_rule "http" do
       rule [ "--proto tcp --dport 80",
              "--proto tcp --dport 443"]
       jump "ACCEPT"
     end
-    
+
     # Tomcat redirects
     simple_iptables_rule "tomcat" do
       table "nat"
@@ -186,43 +185,43 @@ Which results in the following iptables configuration:
 
     # iptables -L
     Chain INPUT (policy DROP)
-    target     prot opt source               destination         
-    system     all  --  anywhere             anywhere            
-    http       all  --  anywhere             anywhere            
-    
+    target     prot opt source               destination
+    system     all  --  anywhere             anywhere
+    http       all  --  anywhere             anywhere
+
     Chain FORWARD (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain OUTPUT (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain http (1 references)
-    target     prot opt source               destination         
+    target     prot opt source               destination
     ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http
     ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:https
-    
+
     Chain system (1 references)
-    target     prot opt source               destination         
-    ACCEPT     all  --  anywhere             anywhere            
+    target     prot opt source               destination
+    ACCEPT     all  --  anywhere             anywhere
     ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED
     ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:ssh
 
     #iptables -L -t nat
     Chain PREROUTING (policy ACCEPT)
-    target     prot opt source               destination         
-    tomcat     all  --  anywhere             anywhere            
-    
+    target     prot opt source               destination
+    tomcat     all  --  anywhere             anywhere
+
     Chain INPUT (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain OUTPUT (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain POSTROUTING (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain tomcat (1 references)
-    target     prot opt source               destination         
+    target     prot opt source               destination
     REDIRECT   tcp  --  anywhere             anywhere             tcp dpt:http redir ports 8080
     REDIRECT   tcp  --  anywhere             anywhere             tcp dpt:https redir ports 8443
 
