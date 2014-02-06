@@ -70,7 +70,7 @@ Additionally, if you want to declare a module (such as log) you can define jump 
       jump false
     end
 
-By default rules are added to the filter table but the nat table is also supported. For example:
+By default rules are added to the filter table but the nat and mangle tables are also supported. For example:
 
     # Tomcat redirects
     simple_iptables_rule "tomcat" do
@@ -79,6 +79,22 @@ By default rules are added to the filter table but the nat table is also support
       rule [ "--protocol tcp --dport 80 --jump REDIRECT --to-port 8080",
              "--protocol tcp --dport 443 --jump REDIRECT --to-port 8443" ]
       jump false
+    end
+
+    #mangle example
+    #NOTE: set jump to false since iptables expects the -j MARK --set-mark in that order
+    simple_iptables_rule "mangle" do
+      table "mangle"
+      direction "PREROUTING"
+      jump false
+      rule "-i eth0 -j MARK --set-mark 0x6
+    end
+
+    #reject all outbound connections attempts to 10/8 on a dual-homed host
+    simple_iptables_rule "reset_10slash8_outbound" do
+      direction "OUTPUT"
+      jump false
+      rule "-p tcp -o eth0 -d 10/8 --jump REJECT --reject-with tcp-reset"
     end
 
 `simple_iptables_policy` Resource
@@ -229,6 +245,9 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.4.0 (May 9, 2013)
+    * Added support for mangle table (#? - Michael Hart)
+    * Updated Gemfile to 11.4.4 (#? - Michael Hart)
 * 0.3.0 (March 5, 2013)
     * Added support for nat table (#10 - Nathan Mische)
     * Updated Gemfile for Travis-CI integration (#10 - Nathan Mische)
