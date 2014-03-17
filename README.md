@@ -248,6 +248,8 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.5.2 (March 19, 2014)
+    * Fix #21, error parsing node['kernel']['release'] (#30 - Michael Parrott)
 * 0.5.1 (March 18, 2014)
     * Update README example so Chef doesn't warn duplicate resources (#32 - Michael Parrott)
 * 0.5.0 (March 18, 2014)
