@@ -12,7 +12,9 @@ action :append do
 
   if not node["simple_iptables"]["chains"][new_resource.table].include?(new_resource.chain)
     node.set["simple_iptables"]["chains"][new_resource.table] = node["simple_iptables"]["chains"][new_resource.table].dup << new_resource.chain
-    node.set["simple_iptables"]["rules"][new_resource.table] = node["simple_iptables"]["rules"][new_resource.table].dup << "-A #{new_resource.direction} --jump #{new_resource.chain}"
+    unless new_resource.chain == new_resource.direction
+      node.set["simple_iptables"]["rules"][new_resource.table] = node["simple_iptables"]["rules"][new_resource.table].dup << "-A #{new_resource.direction} --jump #{new_resource.chain}"
+    end
   end
 
   # Then apply the rules to the node
