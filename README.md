@@ -133,20 +133,23 @@ Suppose you had the following `simple_iptables` configuration:
     # for logical organization.
     
     # Allow all traffic on the loopback device
-    simple_iptables_rule "system" do
+    simple_iptables_rule "loopback" do
+      chain "system"
       rule "--in-interface lo"
       jump "ACCEPT"
     end
     
     # Allow any established connections to continue, even
     # if they would be in violation of other rules.
-    simple_iptables_rule "system" do
+    simple_iptables_rule "established" do
+      chain "system"
       rule "-m conntrack --ctstate ESTABLISHED,RELATED"
       jump "ACCEPT"
     end
     
     # Allow SSH
-    simple_iptables_rule "system" do
+    simple_iptables_rule "ssh" do
+      chain "system"
       rule "--proto tcp --dport 22"
       jump "ACCEPT"
     end
