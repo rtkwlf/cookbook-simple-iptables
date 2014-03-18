@@ -39,7 +39,7 @@ def test_rules(new_resource, rules)
       new_rule = rule_string(new_resource, rule, true)
       new_rule.gsub!("-A #{new_resource.chain}", "-A #{test_chains.first}")
 
-      # Test for jumps to chains that are not actually created on the systemyet, but are already processed in the current recipe
+      # Test for jumps to chains that are not actually created on the system yet, but are already processed in the current recipe
       if node["simple_iptables"]["chains"][new_resource.table].include?(new_resource.jump)
         test_chains.push("_chef_lwrp_test2")
         cleanup_test_chain(new_resource.table, test_chains.last)
