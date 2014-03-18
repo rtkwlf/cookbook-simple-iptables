@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/dcrosta/cookbook-simple-iptables.png?branch=master)](http://travis-ci.org/dcrosta/cookbook-simple-iptables)
+[![Build Status](https://travis-ci.org/rtkwlf/cookbook-simple-iptables.png?branch=master)](https://travis-ci.org/rtkwlf/cookbook-simple-iptables)
 
 Description
 ===========
@@ -248,9 +248,15 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.5.1 (March 18, 2014)
+    * Update README example so Chef doesn't warn duplicate resources (#32 - Michael Parrott)
+* 0.5.0 (March 18, 2014)
+    * Extend cleanup and test code (#31 - Sander van Harmelen)
+    * Disallow adding built-in chains multiple times (#31 - Sander van Harmelen)
 * 0.4.0 (May 9, 2013)
-    * Added support for mangle table (#? - Michael Hart)
-    * Updated Gemfile to 11.4.4 (#? - Michael Hart)
+    * Update foodcritic version used in Travis-CI (#29 - Michael Parrott)
+    * Added support for mangle table (#18 - Michael Hart)
+    * Updated Gemfile to 11.4.4 (#18 - Michael Hart)
 * 0.3.0 (March 5, 2013)
     * Added support for nat table (#10 - Nathan Mische)
     * Updated Gemfile for Travis-CI integration (#10 - Nathan Mische)
