@@ -28,11 +28,19 @@
 
 package "iptables"
 
-# This block runs durin the "execute" phase, so that we can gather the
+# This block runs during the "execute" phase, so that we can gather the
 # resources before we generate the iptables-rules template. If you know of a
 # better way to do this, please let me know!
 ruby_block "run-iptables-resources-early" do
   block do
+    # Before executing the simple_iptables_* resources, reset the
+    # node attributes to their defaults. This gives "action :delete"
+    # semantics for free by removing a resource from a recipe.
+    node.set["simple_iptables"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.set["simple_iptables"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.set["simple_iptables"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
+
+    # Then run all the simple_iptables_* resources
     run_context.resource_collection.each do |resource|
       if resource.kind_of?(Chef::Resource::SimpleIptablesRule)
         Chef::Log.debug("about to run simple_iptables_rule[#{resource.chain}]")
