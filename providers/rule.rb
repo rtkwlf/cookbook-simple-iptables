@@ -8,6 +8,7 @@ action :append do
     rules = new_resource.rule
   end
 
+  # Ensure that the rules are actually valid iptable rules by testing with a temporary chain
   test_rules(new_resource, rules)
 
   if not node["simple_iptables"]["chains"][new_resource.table].include?(new_resource.chain)
