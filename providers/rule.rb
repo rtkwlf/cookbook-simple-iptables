@@ -69,8 +69,3 @@ def rule_string(new_resource, rule, include_table)
   rule
 end
 
-def sort_rules(table)
-  table.sort! {|a,b| a[1] <=> b[1]}
-  table
-end
-
