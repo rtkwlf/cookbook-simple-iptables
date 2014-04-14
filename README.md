@@ -5,8 +5,6 @@ Description
 
 Simple cookbook with LWRPs for managing iptables rules and policies.
 
-This is a fork from the original, which is no longer maintained.
-
 Requirements
 ============
 
