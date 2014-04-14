@@ -103,31 +103,32 @@ By default rules are added to the filter table but the nat and mangle tables are
 By default rules are added to the chain, in the order in which its occur in the recipes.
 You may use the weight parameter for control the order of the rules in chains. For example:
 
-  simple_iptables_rule "reject" do
-    chain "INPUT"
-    rule ""
-    jump "REJECT --reject-with icmp-host-prohibited"
-    weight 90
-  end
+    simple_iptables_rule "reject" do
+      chain "INPUT"
+      rule ""
+      jump "REJECT --reject-with icmp-host-prohibited"
+      weight 90
+    end
 
-  simple_iptables_rule "established" do
-    chain "INPUT"
-    rule "-m conntrack --ctstate ESTABLISHED,RELATED"
-    jump "ACCEPT"
-    weight 1
-  end
+    simple_iptables_rule "established" do
+      chain "INPUT"
+      rule "-m conntrack --ctstate ESTABLISHED,RELATED"
+      jump "ACCEPT"
+      weight 1
+    end
 
-  simple_iptables_rule "icmp" do
-    chain "INPUT"
-    rule "--proto icmp"
-    jump "ACCEPT"
-    weight 2
-  end
+    simple_iptables_rule "icmp" do
+      chain "INPUT"
+      rule "--proto icmp"
+      jump "ACCEPT"
+      weight 2
+    end
 
 This would generate the rules:
-  -A INPUT --jump ACCEPT -m conntrack --ctstate ESTABLISHED,RELATED
-  -A INPUT --jump ACCEPT --proto icmp
-  -A INPUT --jump REJECT --reject-with icmp-host-prohibited
+
+    -A INPUT --jump ACCEPT -m conntrack --ctstate ESTABLISHED,RELATED
+    -A INPUT --jump ACCEPT --proto icmp
+    -A INPUT --jump REJECT --reject-with icmp-host-prohibited
 
 
 `simple_iptables_policy` Resource
