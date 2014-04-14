@@ -7,22 +7,22 @@ action :append do
   else
     rules = new_resource.rule
   end
-
   # Ensure that the rules are actually valid iptable rules by testing with a temporary chain
   test_rules(new_resource, rules)
 
   if not node["simple_iptables"]["chains"][new_resource.table].include?(new_resource.chain)
     node.set["simple_iptables"]["chains"][new_resource.table] = node["simple_iptables"]["chains"][new_resource.table].dup << new_resource.chain unless ["PREROUTING", "INPUT", "FORWARD", "OUTPUT", "POSTROUTING"].include?(new_resource.chain)
     unless new_resource.chain == new_resource.direction
-      node.set["simple_iptables"]["rules"][new_resource.table] = node["simple_iptables"]["rules"][new_resource.table].dup << "-A #{new_resource.direction} --jump #{new_resource.chain}"
+      node.set["simple_iptables"]["rules"][new_resource.table] << ["-A #{new_resource.direction} --jump #{new_resource.chain}", new_resource.weight]
     end
   end
 
   # Then apply the rules to the node
   rules.each do |rule|
     new_rule = rule_string(new_resource, rule, false)
-    if not node["simple_iptables"]["rules"][new_resource.table].include?(new_rule)
-      node.set["simple_iptables"]["rules"][new_resource.table] = node["simple_iptables"]["rules"][new_resource.table].dup << new_rule
+    if not node["simple_iptables"]["rules"][new_resource.table].include?([new_rule, new_resource.weight])
+      node.set["simple_iptables"]["rules"][new_resource.table] << [new_rule, new_resource.weight]
+      node.set["simple_iptables"]["rules"][new_resource.table].sort! {|a,b| a[1] <=> b[1]}
       new_resource.updated_by_last_action(true)
       Chef::Log.debug("added rule '#{new_rule}'")
     else
@@ -68,3 +68,4 @@ def rule_string(new_resource, rule, include_table)
   rule = "#{table}-A #{new_resource.chain} #{jump}#{rule}"
   rule
 end
+

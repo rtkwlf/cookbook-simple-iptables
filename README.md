@@ -100,6 +100,36 @@ By default rules are added to the filter table but the nat and mangle tables are
       rule "-p tcp -o eth0 -d 10/8 --jump REJECT --reject-with tcp-reset"
     end
 
+By default rules are added to the chain, in the order in which its occur in the recipes.
+You may use the weight parameter for control the order of the rules in chains. For example:
+
+  simple_iptables_rule "reject" do
+    chain "INPUT"
+    rule ""
+    jump "REJECT --reject-with icmp-host-prohibited"
+    weight 90
+  end
+
+  simple_iptables_rule "established" do
+    chain "INPUT"
+    rule "-m conntrack --ctstate ESTABLISHED,RELATED"
+    jump "ACCEPT"
+    weight 1
+  end
+
+  simple_iptables_rule "icmp" do
+    chain "INPUT"
+    rule "--proto icmp"
+    jump "ACCEPT"
+    weight 2
+  end
+
+This would generate the rules:
+  -A INPUT --jump ACCEPT -m conntrack --ctstate ESTABLISHED,RELATED
+  -A INPUT --jump ACCEPT --proto icmp
+  -A INPUT --jump REJECT --reject-with icmp-host-prohibited
+
+
 `simple_iptables_policy` Resource
 ---------------------------------
 
@@ -265,6 +295,8 @@ Which results in the following iptables configuration:
 Changes
 =======
 
+* 0.6.1 (April 14, 2014)
+    * Add support mechanism weights.
 * 0.6.0 (March 19, 2014)
     * Add support for the raw table (#33 - Ray Ruvinskiy)
     * Add :delete semantics to iptables rules (#34 - Michael Parrott)
