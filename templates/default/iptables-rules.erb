@@ -8,7 +8,7 @@
 :<%= chain %> - [0:0]
 <% end -%>
 <% node["simple_iptables"]["rules"]["nat"].each do |rule| -%>
-<%= rule[0] %>
+<%= rule[:rule] %>
 <% end -%>
 COMMIT
 # Completed
@@ -23,7 +23,7 @@ COMMIT
 :<%= chain %> - [0:0]
 <% end -%>
 <% node["simple_iptables"]["rules"]["mangle"].each do |rule| -%>
-<%= rule[0] %>
+<%= rule[:rule] %>
 <% end -%>
 COMMIT
 # Completed
@@ -36,7 +36,7 @@ COMMIT
 :<%= chain %> - [0:0]
 <% end -%>
 <% node["simple_iptables"]["rules"]["filter"].each do |rule| -%>
-<%= rule[0] %>
+<%= rule[:rule] %>
 <% end -%>
 COMMIT
 # Completed
@@ -48,7 +48,7 @@ COMMIT
 :<%= chain %> - [0:0]
 <% end -%>
 <% node["simple_iptables"]["rules"]["raw"].each do |rule| -%>
-<%= rule[0] %>
+<%= rule[:rule] %>
 <% end -%>
 COMMIT
 # Completed
