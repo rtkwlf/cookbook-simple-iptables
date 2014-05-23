@@ -58,7 +58,7 @@ end
 case node['platform_family']
 when 'debian'
   iptable_rules = '/etc/iptables-rules'
-when 'rhel'
+when 'rhel', 'fedora'
   iptable_rules = '/etc/sysconfig/iptables'
 end
 
