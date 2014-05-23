@@ -88,3 +88,6 @@ when 'debian'
   end
 end
 
+if platform_family?("rhel")
+  include_recipe "simple_iptables::_redhat"
+end
