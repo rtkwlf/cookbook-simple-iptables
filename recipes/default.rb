@@ -87,4 +87,3 @@ when 'debian'
     action :create
   end
 end
-
