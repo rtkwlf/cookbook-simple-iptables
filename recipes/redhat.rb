@@ -1,3 +1,6 @@
+include_recipe "simple_iptables::default"
+
+
 simple_iptables_policy "INPUT" do
   policy "ACCEPT"
 end

@@ -87,7 +87,3 @@ when 'debian'
     action :create
   end
 end
-
-if platform_family?("rhel")
-  include_recipe "simple_iptables::_redhat"
-end
