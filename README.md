@@ -332,7 +332,9 @@ Which results in the following iptables configuration:
 
 Changes
 =======
-
+* 0.6.2 (May 27, 2014)
+    * Add default iptables rules for redhat platfrom.
+    * Fix #38, add case for fedora platform.
 * 0.6.1 (April 14, 2014)
     * Add support mechanism weights.
 * 0.6.0 (March 19, 2014)
