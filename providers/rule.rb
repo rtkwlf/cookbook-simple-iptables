@@ -22,7 +22,7 @@ action :append do
     new_rule = rule_string(new_resource, rule, false)
     if not node["simple_iptables"]["rules"][new_resource.table].include?({:rule => new_rule, :weight => new_resource.weight})
       node.set["simple_iptables"]["rules"][new_resource.table] = node["simple_iptables"]["rules"][new_resource.table].to_a << {:rule => new_rule, :weight => new_resource.weight}
-      node.set["simple_iptables"]["rules"][new_resource.table].sort! {|a,b| a[:weight].to_i <=> b[:weight].to_i}
+      node.set["simple_iptables"]["rules"][new_resource.table].sort! {|a,b| (a[:weight]||50) <=> (b[:weight]||50)}
       new_resource.updated_by_last_action(true)
       Chef::Log.debug("added rule '#{new_rule}'")
     else
