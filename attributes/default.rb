@@ -1,12 +1,3 @@
-default["simple_iptables"]["rules"]["filter"] = []
-default["simple_iptables"]["rules"]["nat"] = []
-default["simple_iptables"]["rules"]["mangle"] = []
-default["simple_iptables"]["rules"]["raw"] = []
-default["simple_iptables"]["chains"]["filter"] = []
-default["simple_iptables"]["chains"]["nat"] = []
-default["simple_iptables"]["chains"]["mangle"] = []
-default["simple_iptables"]["chains"]["raw"] = []
-default["simple_iptables"]["policy"]["filter"] = {}
-default["simple_iptables"]["policy"]["nat"] = {}
-default["simple_iptables"]["policy"]["mangle"] = {}
-default["simple_iptables"]["policy"]["raw"] = {}
+default["simple_iptables"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+default["simple_iptables"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+default["simple_iptables"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}

@@ -332,9 +332,16 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.6.3 (May 30, 2014)
+    * Change how default attributes are set in `attributes/default.rb` file for
+      consistency with how they are set when they are cleared in
+      `simple_iptables` recipe
+    * Clarify in the README that the `simple_iptables` recipe needs to be included
+      before any of the resources provided by the cookbook are used
+    * The changes in this version are to address #37
 * 0.6.2 (May 27, 2014)
-    * Add default iptables rules for redhat platfrom.
-    * Fix #38, add case for fedora platform.
+    * Add default iptables rules for redhat platfrom (#41 - Pavel Yudin)
+    * Add case for fedora platform (#38 - Jordan Evans)
 * 0.6.1 (April 14, 2014)
     * Add support mechanism weights.
 * 0.6.0 (March 19, 2014)
