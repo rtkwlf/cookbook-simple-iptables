@@ -3,7 +3,7 @@ maintainer_email "dev@arcticwolf.com"
 license          "BSD"
 description      "Simple LWRP and recipe for managing iptables rules"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "0.6.2"
+version          "0.6.3"
 name             "simple_iptables"
 
 supports "debian", ">= 6.0"
