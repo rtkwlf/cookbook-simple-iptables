@@ -62,6 +62,37 @@ when 'rhel', 'fedora'
   iptable_rules = '/etc/sysconfig/iptables'
 end
 
+ruby_block "test-iptables" do
+  block do
+    cmd = Mixlib::ShellOut.new("iptables-restore --test < #{iptable_rules}",
+                               :user => "root")
+    cmd.run_command
+    if cmd.error?
+      msg = <<-eos
+iptables-restore exited with code #{cmd.exitstatus} while testing new rules
+STDOUT:
+#{cmd.stdout}
+STDERR:
+#{cmd.stderr}
+eos
+      match = cmd.stderr.match /Error occurred at line: (\d+)/
+      if match
+        line_no = match[1].to_i
+        msg << "Line #{line_no}: #{IO.readlines(iptable_rules)[line_no-1]}"
+      end
+      # Delete the file so that the next Chef run is forced to recreate it
+      # and retest it. Otherwise, if the rules remain unchanged, the template
+      # resource won't recreate the file, won't notify the test resource,
+      # and the Chef run will be allowed to complete successfully despite
+      # and invalid rule being present.
+      File.delete(iptable_rules)
+      raise msg
+    end
+  end
+  notifies :run, "execute[reload-iptables]"
+  action :nothing
+end
+
 execute "reload-iptables" do
   command "iptables-restore < #{iptable_rules}"
   user "root"
@@ -71,7 +102,7 @@ end
 template iptable_rules do
   source "iptables-rules.erb"
   cookbook "simple_iptables"
-  notifies :run, "execute[reload-iptables]"
+  notifies :create, "ruby_block[test-iptables]"
   action :create
 end
 
