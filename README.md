@@ -332,6 +332,10 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.6.4 (June 8, 2014)
+    * Change testing mechanism to use `iptables-restore --test`. This tests
+      all rules at once and results in much better performance. In case of a
+      failure, the rule causing it is included in the exception raised.
 * 0.6.3 (May 30, 2014)
     * Change how default attributes are set in `attributes/default.rb` file for
       consistency with how they are set when they are cleared in
