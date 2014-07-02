@@ -102,21 +102,21 @@ By default rules are added to the chain, in the order in which its occur in the 
 You may use the weight parameter for control the order of the rules in chains. For example:
 
     simple_iptables_rule "reject" do
-      chain "INPUT"
+      direction "INPUT"
       rule ""
       jump "REJECT --reject-with icmp-host-prohibited"
       weight 90
     end
 
     simple_iptables_rule "established" do
-      chain "INPUT"
+      direction "INPUT"
       rule "-m conntrack --ctstate ESTABLISHED,RELATED"
       jump "ACCEPT"
       weight 1
     end
 
     simple_iptables_rule "icmp" do
-      chain "INPUT"
+      direction "INPUT"
       rule "--proto icmp"
       jump "ACCEPT"
       weight 2
@@ -127,6 +127,21 @@ This would generate the rules:
     -A INPUT --jump ACCEPT -m conntrack --ctstate ESTABLISHED,RELATED
     -A INPUT --jump ACCEPT --proto icmp
     -A INPUT --jump REJECT --reject-with icmp-host-prohibited
+
+Defining a `simple_iptables_rule` resource actually creates a new chain with the name of
+the resource and a jump to the chain from the chain specified in the `direction` attribute.
+By default, the jump is unconditional. However, the `chain_condition` attribute can be
+specified to make the jump conditional. For example:
+
+    simple_iptables_rule "management_interface" do
+      direction "INPUT"
+      chain_condition "-i eth1"
+      rule [ "-p tcp --dport 80", "-p tcp --dport 443" ]
+      jump "ACCEPT"
+    end
+
+The rules specified under the `rule` attribute will only be evaluate for packets for which
+the rule in `chain_condition` holds.
 
 
 `simple_iptables_policy` Resource
