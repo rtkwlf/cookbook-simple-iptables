@@ -67,7 +67,7 @@ ruby_block "test-iptables" do
     cmd = Mixlib::ShellOut.new("iptables-restore --test < #{iptable_rules}",
                                :user => "root")
     cmd.run_command
-    if cmd.error?
+    if !Array(cmd.valid_exit_codes).include?(cmd.exitstatus)
       msg = <<-eos
 iptables-restore exited with code #{cmd.exitstatus} while testing new rules
 STDOUT:
