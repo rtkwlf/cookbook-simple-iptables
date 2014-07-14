@@ -75,7 +75,7 @@ STDOUT:
 STDERR:
 #{cmd.stderr}
 eos
-      match = cmd.stderr.match /Error occurred at line: (\d+)/
+      match = cmd.stderr.match /line:?\s*(\d+)/
       if match
         line_no = match[1].to_i
         msg << "Line #{line_no}: #{IO.readlines(iptable_rules)[line_no-1]}"
