@@ -1,3 +1,6 @@
 tmp
 test/support/Gemfile.lock
 .rvmrc
+.kitchen.local.yml
+Berksfile.lock
+.kitchen
