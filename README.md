@@ -348,6 +348,9 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.6.5 (July 18, 2014)
+    * Add jump_rule attribute to simple_iptables_rule resource.
+    * Add test-kitchen.
 * 0.6.4 (June 8, 2014)
     * Change testing mechanism to use `iptables-restore --test`. This tests
       all rules at once and results in much better performance. In case of a
