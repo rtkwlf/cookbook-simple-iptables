@@ -127,6 +127,22 @@ This would generate the rules:
     -A INPUT --jump ACCEPT -m conntrack --ctstate ESTABLISHED,RELATED
     -A INPUT --jump ACCEPT --proto icmp
     -A INPUT --jump REJECT --reject-with icmp-host-prohibited
+    
+By default rules are added to the chain, which specified as Resource name or chain attribute. Jump to this chain adds to chain, which specified in direction attribute. This jump look like this:
+    
+    -A INPUT -j our_chain
+If you need jump with rule, you may use jump_rule attribute. Example:
+    
+    simple_iptables_rule "our_chain" do
+      rule "-p tcp --dport 80"
+      jump_rule "-p tcp"
+      jump "ACCEPT"
+    end
+    
+This would generate the rules:
+
+    -A INPUT -p tcp -m tcp -j our_chain
+    -A our_chain -p tcp -m tcp --dport 80 -j ACCEPT
 
 
 `simple_iptables_policy` Resource
