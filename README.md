@@ -338,6 +338,13 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.6.5 (July 20, 2014)
+    * Fix one-shot testing code to work with Chef versions prior to 11.12.
+    * Make one-shot testing error line detection code more robust (#48 - Kim Tore Jensen)
+    * Add `chain_condition` attribute to `rule` provider. This allows to specify
+      a condition which is tested before jumping to the chain.
+      If a `chain_condition` is not specified, the jump is unconditional, as before.
+    * Fix README examples to use `direction` attribute rather than `chain`.
 * 0.6.4 (June 8, 2014)
     * Change testing mechanism to use `iptables-restore --test`. This tests
       all rules at once and results in much better performance. In case of a
