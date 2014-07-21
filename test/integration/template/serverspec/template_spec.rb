@@ -10,8 +10,8 @@ describe iptables do
   it { should have_rule('-A array_of_rules -p tcp -m tcp --dport 84 -j ACCEPT') }
   it { should have_rule('-A array_of_rules -p tcp -m tcp --dport 85 -j ACCEPT') }
   it { should have_rule('-A INPUT -j array_of_rules') }
-  it { should have_rule('*nat') }
+  it { should_not have_rule('*nat') }
   it { should have_rule('*mangle') }
   it { should have_rule('*filter') }
-  it { should have_rule('*raw') }
+  it { should_not have_rule('*raw') }
 end

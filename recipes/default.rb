@@ -101,7 +101,7 @@ end
 
 template iptable_rules do
   source "iptables-rules.erb"
-  cookbook "simple_iptables"
+  cookbook node["simple_iptables"]["template_cookbook"] if node["simple_iptables"]["template_cookbook"]
   notifies :create, "ruby_block[test-iptables]"
   action :create
 end
