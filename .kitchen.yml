@@ -14,3 +14,7 @@ suites:
     run_list:
       - recipe[smoke]
     attributes:
+  - name: template
+    run_list:
+      - recipe[smoke::template]
+    attributes:
