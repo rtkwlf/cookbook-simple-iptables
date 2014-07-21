@@ -20,7 +20,7 @@ end
 
 simple_iptables_rule 'jump_with_rule' do
   rule '-p tcp --dport 83'
-  jump_rule '-m state --state NEW'
+  chain_condition '-m state --state NEW'
   jump 'ACCEPT'
 end
 
