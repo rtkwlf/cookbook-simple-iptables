@@ -14,3 +14,7 @@ suites:
     run_list:
       - recipe[smoke]
     attributes:
+  - name: list_of_tables
+    run_list:
+      - recipe[smoke::tables]
+    attributes:
