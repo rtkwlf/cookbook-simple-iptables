@@ -10,7 +10,7 @@ action :append do
 
   if not node["simple_iptables"]["chains"][new_resource.table].include?(new_resource.chain)
     node.set["simple_iptables"]["chains"][new_resource.table] = node["simple_iptables"]["chains"][new_resource.table].dup << new_resource.chain unless ["PREROUTING", "INPUT", "FORWARD", "OUTPUT", "POSTROUTING"].include?(new_resource.chain)
-    unless new_resource.chain == new_resource.direction
+    unless new_resource.chain == new_resource.direction || new_resource.direction == :none
       node.set["simple_iptables"]["rules"][new_resource.table] << {:rule => "-A #{new_resource.direction} #{new_resource.chain_condition} --jump #{new_resource.chain}", :weight => new_resource.weight}
     end
   end

@@ -143,6 +143,22 @@ specified to make the jump conditional. For example:
 The rules specified under the `rule` attribute will only be evaluate for packets for which
 the rule in `chain_condition` holds.
 
+Sometimes we might want to define a chain where we only want to jump from another chain we define. 
+By default, an automatic jump will be made to chains defined using the `simple_iptables_rule` resource
+from the chain specified using the `direction` attribute of the resource. To prevent jumping to the
+chain from the direction chains, we can set the direction attribute to the symbol `:none`.
+For example, consider a chain used to log
+
+    simple_iptables_rule "logging_drop" do
+      direction :none
+      rule ['-j LOG --log-level 4 --log-prefix "IPTABLES_DROP: "',
+            '-j DROP']
+      jump false
+    end
+
+We can then jump to this chain from other simple_iptables_rule chains, but an automatic jump to
+this chain won't be added.
+
 
 `simple_iptables_policy` Resource
 ---------------------------------
@@ -338,6 +354,10 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.6.6 (Aug 1, 2014)
+    * Added `:none` to one of the values that the attribute `direction` can be set to.
+      When set to :none, a rule to jump to the chain created will not be added to any
+      direction chains.
 * 0.6.5 (July 20, 2014)
     * Fix one-shot testing code to work with Chef versions prior to 11.12.
     * Make one-shot testing error line detection code more robust (#48 - Kim Tore Jensen)
