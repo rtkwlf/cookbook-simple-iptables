@@ -14,7 +14,15 @@ suites:
     run_list:
       - recipe[smoke]
     attributes:
+  - name: ipv6_default
+    run_list:
+      - recipe[smoke::ipv6_default]
+    attributes:
   - name: list_of_tables
     run_list:
       - recipe[smoke::tables]
+    attributes:
+  - name: ipv6_list_of_tables
+    run_list:
+      - recipe[smoke::ipv6_tables]
     attributes:

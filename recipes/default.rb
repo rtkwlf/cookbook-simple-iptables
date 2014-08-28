@@ -36,10 +36,13 @@ ruby_block "run-iptables-resources-early" do
     # Before executing the simple_iptables_* resources, reset the
     # node attributes to their defaults. This gives "action :delete"
     # semantics for free by removing a resource from a recipe.
-    node.set["simple_iptables"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
+    node.set["simple_iptables"]["ipv4"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.set["simple_iptables"]["ipv4"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.set["simple_iptables"]["ipv4"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
 
+    node.set["simple_iptables"]["ipv6"]["chains"] = {"filter" => [], "mangle" => [], "raw" => []}
+    node.set["simple_iptables"]["ipv6"]["rules"] = {"filter" => [], "mangle" => [], "raw" => []}
+    node.set["simple_iptables"]["ipv6"]["policy"] = {"filter" => {}, "mangle" => {}, "raw" => {}}
     # Then run all the simple_iptables_* resources
     run_context.resource_collection.each do |resource|
       if resource.kind_of?(Chef::Resource::SimpleIptablesRule)
@@ -58,63 +61,126 @@ end
 case node['platform_family']
 when 'debian'
   iptable_rules = '/etc/iptables-rules'
+  ip6table_rules = '/etc/ip6tables-rules'
 when 'rhel', 'fedora'
   iptable_rules = '/etc/sysconfig/iptables'
+  ip6table_rules = '/etc/sysconfig/ip6tables'
 end
 
-ruby_block "test-iptables" do
-  block do
-    cmd = Mixlib::ShellOut.new("iptables-restore --test < #{iptable_rules}",
-                               :user => "root")
-    cmd.run_command
-    if !Array(cmd.valid_exit_codes).include?(cmd.exitstatus)
-      msg = <<-eos
-iptables-restore exited with code #{cmd.exitstatus} while testing new rules
-STDOUT:
-#{cmd.stdout}
-STDERR:
-#{cmd.stderr}
-eos
-      match = cmd.stderr.match /line:?\s*(\d+)/
-      if match
-        line_no = match[1].to_i
-        msg << "Line #{line_no}: #{IO.readlines(iptable_rules)[line_no-1]}"
+if node["simple_iptables"]["ip_versions"].include?("ipv4")
+  ruby_block "test-iptables" do
+    block do
+      cmd = Mixlib::ShellOut.new("iptables-restore --test < #{iptable_rules}",
+                                 :user => "root")
+      cmd.run_command
+      if !Array(cmd.valid_exit_codes).include?(cmd.exitstatus)
+        msg = <<-eos
+  iptables-restore exited with code #{cmd.exitstatus} while testing new rules
+  STDOUT:
+  #{cmd.stdout}
+  STDERR:
+  #{cmd.stderr}
+  eos
+        match = cmd.stderr.match /line:?\s*(\d+)/
+        if match
+          line_no = match[1].to_i
+          msg << "Line #{line_no}: #{IO.readlines(iptable_rules)[line_no-1]}"
+        end
+        # Delete the file so that the next Chef run is forced to recreate it
+        # and retest it. Otherwise, if the rules remain unchanged, the template
+        # resource won't recreate the file, won't notify the test resource,
+        # and the Chef run will be allowed to complete successfully despite
+        # and invalid rule being present.
+        File.delete(iptable_rules)
+        raise msg
       end
-      # Delete the file so that the next Chef run is forced to recreate it
-      # and retest it. Otherwise, if the rules remain unchanged, the template
-      # resource won't recreate the file, won't notify the test resource,
-      # and the Chef run will be allowed to complete successfully despite
-      # and invalid rule being present.
-      File.delete(iptable_rules)
-      raise msg
     end
+    notifies :run, "execute[reload-iptables]"
+    action :nothing
   end
-  notifies :run, "execute[reload-iptables]"
-  action :nothing
+
+  execute "reload-iptables" do
+    command "iptables-restore < #{iptable_rules}"
+    user "root"
+    action :nothing
+  end
+
+  template iptable_rules do
+    source "iptables-rules.erb"
+    cookbook "simple_iptables"
+    notifies :create, "ruby_block[test-iptables]"
+    action :create
+  end
 end
 
-execute "reload-iptables" do
-  command "iptables-restore < #{iptable_rules}"
-  user "root"
-  action :nothing
-end
+if node["simple_iptables"]["ip_versions"].include?("ipv6")
+  ruby_block "test-ip6tables" do
+    block do
+      cmd = Mixlib::ShellOut.new("ip6tables-restore --test < #{ip6table_rules}",
+                                 :user => "root")
+      cmd.run_command
+      if !Array(cmd.valid_exit_codes).include?(cmd.exitstatus)
+        msg = <<-eos
+  ip6tables-restore exited with code #{cmd.exitstatus} while testing new rules
+  STDOUT:
+  #{cmd.stdout}
+  STDERR:
+  #{cmd.stderr}
+  eos
+        match = cmd.stderr.match /line:?\s*(\d+)/
+        if match
+          line_no = match[1].to_i
+          msg << "Line #{line_no}: #{IO.readlines(ip6table_rules)[line_no-1]}"
+        end
+        # Delete the file so that the next Chef run is forced to recreate it
+        # and retest it. Otherwise, if the rules remain unchanged, the template
+        # resource won't recreate the file, won't notify the test resource,
+        # and the Chef run will be allowed to complete successfully despite
+        # and invalid rule being present.
+        File.delete(ip6table_rules)
+        raise msg
+      end
+    end
+    notifies :run, "execute[reload-ip6tables]"
+    action :nothing
+  end
 
-template iptable_rules do
-  source "iptables-rules.erb"
-  cookbook "simple_iptables"
-  notifies :create, "ruby_block[test-iptables]"
-  action :create
+  execute "reload-ip6tables" do
+    command "ip6tables-restore < #{ip6table_rules}"
+    user "root"
+    action :nothing
+  end
+
+  template ip6table_rules do
+    source "ip6tables-rules.erb"
+    cookbook "simple_iptables"
+    notifies :create, "ruby_block[test-ip6tables]"
+    action :create
+  end
 end
 
 case node['platform_family']
 when 'debian'
 
-  # TODO: Generalize this for other platforms somehow
-  file "/etc/network/if-up.d/iptables-rules" do
-    owner "root"
-    group "root"
-    mode "0755"
-    content "#!/bin/bash\niptables-restore < #{iptable_rules}\n"
-    action :create
+  if node["simple_iptables"]["ip_versions"].include?("ipv4")
+    # TODO: Generalize this for other platforms somehow
+    file "/etc/network/if-up.d/iptables-rules" do
+      owner "root"
+      group "root"
+      mode "0755"
+      content "#!/bin/bash\niptables-restore < #{iptable_rules}\n"
+      action :create
+    end
   end
+
+  if node["simple_iptables"]["ip_versions"].include?("ipv6")
+    file "/etc/network/if-up.d/ip6tables-rules" do
+      owner "root"
+      group "root"
+      mode "0755"
+      content "#!/bin/bash\nip6tables-restore < #{ip6table_rules}\n"
+      action :create
+    end
+  end
+
 end
