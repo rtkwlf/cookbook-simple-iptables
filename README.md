@@ -220,6 +220,37 @@ COMMIT
 # Completed
 ```
 
+`IPv6` support
+--------------
+
+To support IPv6, you will need to add `ipv6` the attribute like:
+default["simple_iptables"]["ip_versions"] = ["ipv4", "ipv6"]
+
+When using `simple_iptables_policy` or `simple_iptables_rule` resources, you
+can enable the policy/rule for either `:ipv4`, `:ipv6` or `:both` using the
+`ip_version` parameter. For example:
+
+    simple_iptables_rule "management_interface" do
+      direction "INPUT"
+      chain_condition "-i eth1"
+      rule [ "-p tcp --dport 80", "-p tcp --dport 443" ]
+      jump "ACCEPT"
+      ip_version :both
+    end
+
+will set the rule for both IPv4 and IPv6,
+
+    simple_iptables_rule "management_interface" do
+      direction "INPUT"
+      chain_condition "-i eth1"
+      rule [ "-p tcp --dport 80", "-p tcp --dport 443" ]
+      jump "ACCEPT"
+      ip_version :ipv6
+    end
+
+will set it for IPv6 only. The default is to set the rule/policy for ipv4 only.
+
+
 Example
 =======
 

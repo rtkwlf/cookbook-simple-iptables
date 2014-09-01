@@ -3,6 +3,7 @@ include_recipe "simple_iptables::default"
 
 simple_iptables_policy "INPUT" do
   policy "ACCEPT"
+  ip_version :ipv4
 end
 
 simple_iptables_rule "established" do
@@ -10,6 +11,7 @@ simple_iptables_rule "established" do
   rule "-m conntrack --ctstate ESTABLISHED,RELATED"
   jump "ACCEPT"
   weight 1
+  ip_version :ipv4
 end
 
 simple_iptables_rule "icmp" do
@@ -17,6 +19,7 @@ simple_iptables_rule "icmp" do
   rule "--proto icmp"
   jump "ACCEPT"
   weight 2
+  ip_version :ipv4
 end
 
 simple_iptables_rule "loopback" do
@@ -24,6 +27,7 @@ simple_iptables_rule "loopback" do
   rule "--in-interface lo"
   jump "ACCEPT"
   weight 3
+  ip_version :ipv4
 end
 
 simple_iptables_rule "ssh" do
@@ -31,6 +35,7 @@ simple_iptables_rule "ssh" do
   rule "--proto tcp --dport 22 -m conntrack --ctstate NEW"
   jump "ACCEPT"
   weight 70
+  ip_version :ipv4
 end
 
 simple_iptables_rule "reject" do
@@ -38,6 +43,7 @@ simple_iptables_rule "reject" do
   rule ""
   jump "REJECT --reject-with icmp-host-prohibited"
   weight 90
+  ip_version :ipv4
 end
 
 simple_iptables_rule "reject" do
@@ -46,4 +52,5 @@ simple_iptables_rule "reject" do
   rule ""
   jump "REJECT --reject-with icmp-host-prohibited"
   weight 90
+  ip_version :ipv4
 end
