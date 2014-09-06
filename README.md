@@ -385,10 +385,14 @@ Which results in the following iptables configuration:
 
 Changes
 =======
-* 0.6.6 (Aug 1, 2014)
-    * Added `:none` to one of the values that the attribute `direction` can be set to.
+* 0.7.0 (September 6, 2014)
+    * Add ip6tables (IPv6) support (#56 - chantra)
+    * Add `:none` to one of the values that the attribute `direction` can be set to.
       When set to :none, a rule to jump to the chain created will not be added to any
-      direction chains.
+      direction chains (#54 - Kevin Deng)
+    * Add `node.simple_iptables.tables` attribute to specify the tables for which rules
+      will be generated (#53 - Pavel Yudin)
+    * Add Test Kitchen tests (#51 - Pavel Yudin)
 * 0.6.5 (July 20, 2014)
     * Fix one-shot testing code to work with Chef versions prior to 11.12.
     * Make one-shot testing error line detection code more robust (#48 - Kim Tore Jensen)
