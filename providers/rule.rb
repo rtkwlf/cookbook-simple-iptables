@@ -41,7 +41,8 @@ end
 def rule_string(new_resource, rule, include_table)
   jump = new_resource.jump ? "--jump #{new_resource.jump} " : ""
   table = include_table ? "--table #{new_resource.table} " : ""
-  rule = "#{table}-A #{new_resource.chain} #{jump}#{rule}"
+  comment = new_resource.comment ? %Q{ -m comment --comment "#{new_resource.comment}" } : ""
+  rule = "#{table}-A #{new_resource.chain} #{jump}#{rule}#{comment}"
   rule
 end
 
