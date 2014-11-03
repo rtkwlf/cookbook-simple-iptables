@@ -26,14 +26,17 @@ def handle_rule(new_resource, ip_version)
 
   # Then apply the rules to the node
   rules.each do |rule|
-    new_rule = rule_string(new_resource, rule, false)
-    if not node["simple_iptables"][ip_version]["rules"][new_resource.table].include?({:rule => new_rule, :weight => new_resource.weight})
-      node.set["simple_iptables"][ip_version]["rules"][new_resource.table] << {:rule => new_rule, :weight => new_resource.weight}
-      node.set["simple_iptables"][ip_version]["rules"][new_resource.table].sort! {|a,b| a[:weight] <=> b[:weight]}
+    new_rule_string = rule_string(new_resource, rule, false)
+    new_rule = {:rule => new_rule_string, :weight => new_resource.weight}
+    table_rules = node.set["simple_iptables"][ip_version]["rules"][new_resource.table]
+
+    unless table_rules.include?(new_rule)
+      table_rules << new_rule
+      table_rules.sort! {|a,b| a[:weight] <=> b[:weight]}
       new_resource.updated_by_last_action(true)
-      Chef::Log.debug("[#{ip_version}] added rule '#{new_rule}'")
+      Chef::Log.debug("[#{ip_version}] added rule '#{new_rule_string}'")
     else
-      Chef::Log.debug("[#{ip_version}] ignoring duplicate simple_iptables_rule '#{new_rule}'")
+      Chef::Log.debug("[#{ip_version}] ignoring duplicate simple_iptables_rule '#{new_rule_string}'")
     end
   end
 end
