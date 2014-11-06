@@ -125,6 +125,16 @@ eos
       content "#!/bin/bash\nip#{v}tables-restore < #{iptable_rules}\n"
       action :create
     end
+  when 'rhel'
+    if node['platform_version'].to_i >= 7
+      package "iptables-services"
+      service "iptables" do
+        action [ :enable, :start ]
+      end
+      service "ip6tables" do
+        action [ :enable, :start ]
+      end
+    end
   end
 end
 
