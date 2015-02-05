@@ -159,6 +159,9 @@ For example, consider a chain used to log
 We can then jump to this chain from other simple_iptables_rule chains, but an automatic jump to
 this chain won't be added.
 
+By default, the name of the `simple_iptables_resource` is also used for an `iptables` comment.
+This default can be overridden by explicitly specifying a `comment` attribute.
+
 
 `simple_iptables_policy` Resource
 ---------------------------------
@@ -385,6 +388,12 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.7.1 (Feburary 5, 2015)
+    * Allow setting comment for rule (#57 - TheMeier)
+    * Load rules on reboot on RHEL 7 and later (#58 - TheMeier)
+    * Use the `simple_iptables_rule` resource name as the comment by default (#63 - dblessing)
+    * Fix bug allowing duplicate entries (#60 - roman-yepishev-enoc)
+    * Add ChefSpec matchers (#64 - dblessing)
 * 0.7.0 (September 6, 2014)
     * Add ip6tables (IPv6) support (#56 - chantra)
     * Add `:none` to one of the values that the attribute `direction` can be set to.
