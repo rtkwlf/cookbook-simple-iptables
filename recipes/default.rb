@@ -126,7 +126,7 @@ eos
       action :create
     end
   when 'rhel'
-    if node['platform_version'].to_i >= 7
+    if node['platform'] != 'amazon' && node['platform_version'].to_i >= 7
       package "iptables-services"
       service "iptables" do
         action [ :enable, :start ]
