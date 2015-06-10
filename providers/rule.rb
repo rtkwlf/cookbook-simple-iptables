@@ -14,8 +14,10 @@ end
 def handle_rule(new_resource, ip_version)
   if new_resource.rule.kind_of?(String)
     rules = [new_resource.rule]
-  else
+  elsif new_resource.rule.kind_of?(Array)
     rules = new_resource.rule
+  else
+    rules = ['']
   end
   if not node["simple_iptables"][ip_version]["chains"][new_resource.table].include?(new_resource.chain)
     node.set["simple_iptables"][ip_version]["chains"][new_resource.table] = node["simple_iptables"][ip_version]["chains"][new_resource.table].dup << new_resource.chain unless ["PREROUTING", "INPUT", "FORWARD", "OUTPUT", "POSTROUTING"].include?(new_resource.chain)

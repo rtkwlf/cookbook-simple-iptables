@@ -103,7 +103,6 @@ You may use the weight parameter for control the order of the rules in chains. F
 
     simple_iptables_rule "reject" do
       direction "INPUT"
-      rule ""
       jump "REJECT --reject-with icmp-host-prohibited"
       weight 90
     end
@@ -143,7 +142,7 @@ specified to make the jump conditional. For example:
 The rules specified under the `rule` attribute will only be evaluate for packets for which
 the rule in `chain_condition` holds.
 
-Sometimes we might want to define a chain where we only want to jump from another chain we define. 
+Sometimes we might want to define a chain where we only want to jump from another chain we define.
 By default, an automatic jump will be made to chains defined using the `simple_iptables_rule` resource
 from the chain specified using the `direction` attribute of the resource. To prevent jumping to the
 chain from the direction chains, we can set the direction attribute to the symbol `:none`.
@@ -263,11 +262,11 @@ Suppose you had the following `simple_iptables` configuration:
     simple_iptables_policy "INPUT" do
       policy "DROP"
     end
-    
+
     # The following rules define a "system" chain; chains
     # are used as a convenient way of grouping rules together,
     # for logical organization.
-    
+
     # Allow all traffic on the loopback device
     simple_iptables_rule "system" do
       rule [ # Allow all traffic on the loopback device
@@ -280,14 +279,14 @@ Suppose you had the following `simple_iptables` configuration:
            ]
       jump "ACCEPT"
     end
-    
+
     # Allow HTTP, HTTPS
     simple_iptables_rule "http" do
       rule [ "--proto tcp --dport 80",
              "--proto tcp --dport 443" ]
       jump "ACCEPT"
     end
-    
+
     # Tomcat redirects
     simple_iptables_rule "tomcat" do
       table "nat"
@@ -346,48 +345,50 @@ Which results in the following iptables configuration:
 
     # iptables -L
     Chain INPUT (policy DROP)
-    target     prot opt source               destination         
-    system     all  --  anywhere             anywhere            
-    http       all  --  anywhere             anywhere            
-    
+    target     prot opt source               destination
+    system     all  --  anywhere             anywhere
+    http       all  --  anywhere             anywhere
+
     Chain FORWARD (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain OUTPUT (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain http (1 references)
-    target     prot opt source               destination         
+    target     prot opt source               destination
     ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http
     ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:https
-    
+
     Chain system (1 references)
-    target     prot opt source               destination         
-    ACCEPT     all  --  anywhere             anywhere            
+    target     prot opt source               destination
+    ACCEPT     all  --  anywhere             anywhere
     ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED
     ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:ssh
 
     #iptables -L -t nat
     Chain PREROUTING (policy ACCEPT)
-    target     prot opt source               destination         
-    tomcat     all  --  anywhere             anywhere            
-    
+    target     prot opt source               destination
+    tomcat     all  --  anywhere             anywhere
+
     Chain INPUT (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain OUTPUT (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain POSTROUTING (policy ACCEPT)
-    target     prot opt source               destination         
-    
+    target     prot opt source               destination
+
     Chain tomcat (1 references)
-    target     prot opt source               destination         
+    target     prot opt source               destination
     REDIRECT   tcp  --  anywhere             anywhere             tcp dpt:http redir ports 8080
     REDIRECT   tcp  --  anywhere             anywhere             tcp dpt:https redir ports 8443
 
 Changes
 =======
+* 0.7.2 (June 10, 2015)
+    * simple_iptables_rule attribute "rule" defaults to ""
 * 0.7.1 (Feburary 5, 2015)
     * Allow setting comment for rule (#57 - TheMeier)
     * Load rules on reboot on RHEL 7 and later (#58 - TheMeier)
