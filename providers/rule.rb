@@ -3,19 +3,23 @@ include Chef::Mixin::ShellOut
 
 
 action :append do
+  updated = false
   if [:ipv4, :both].include?(new_resource.ip_version)
-    handle_rule(new_resource, "ipv4")
+    updated ||= handle_rule(new_resource, "ipv4")
   end
   if [:ipv6, :both].include?(new_resource.ip_version)
-    handle_rule(new_resource, "ipv6")
+    updated ||= handle_rule(new_resource, "ipv6")
   end
+  new_resource.updated_by_last_action(updated)
 end
 
 def handle_rule(new_resource, ip_version)
   if new_resource.rule.kind_of?(String)
     rules = [new_resource.rule]
-  else
+  elsif new_resource.rule.kind_of?(Array)
     rules = new_resource.rule
+  else
+    rules = ['']
   end
   if not node["simple_iptables"][ip_version]["chains"][new_resource.table].include?(new_resource.chain)
     node.set["simple_iptables"][ip_version]["chains"][new_resource.table] = node["simple_iptables"][ip_version]["chains"][new_resource.table].dup << new_resource.chain unless ["PREROUTING", "INPUT", "FORWARD", "OUTPUT", "POSTROUTING"].include?(new_resource.chain)
@@ -25,6 +29,7 @@ def handle_rule(new_resource, ip_version)
   end
 
   # Then apply the rules to the node
+  updated = false
   rules.each do |rule|
     new_rule_string = rule_string(new_resource, rule, false)
     new_rule = {:rule => new_rule_string, :weight => new_resource.weight}
@@ -33,12 +38,13 @@ def handle_rule(new_resource, ip_version)
     unless table_rules.include?(new_rule)
       table_rules << new_rule
       table_rules.sort! {|a,b| a[:weight] <=> b[:weight]}
-      new_resource.updated_by_last_action(true)
+      updated = true
       Chef::Log.debug("[#{ip_version}] added rule '#{new_rule_string}'")
     else
       Chef::Log.debug("[#{ip_version}] ignoring duplicate simple_iptables_rule '#{new_rule_string}'")
     end
   end
+  return updated
 end
 
 def rule_string(new_resource, rule, include_table)
