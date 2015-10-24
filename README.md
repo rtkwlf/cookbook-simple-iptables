@@ -387,6 +387,9 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.7.3 (October 24, 2015)
+    * Fix ipv6 support when using ip-version :both (#73 - chantra)
+    * Avoid Lazy Defaults in LWRP Definitions to maintain compatibility with older Chef version
 * 0.7.2 (June 12, 2015)
     * simple_iptables_rule attribute "rule" defaults to "" (#71 - rtkcstegel)
     * fixed foodcritic errors saying provider needed to always call new_resource.updated_by_last_action (#71 - rtkcstegel)
