@@ -387,6 +387,8 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.7.4 (January 25, 2016)
+    * A `:default` parameter should not be specified on `:name_attribute` attributes (#78 - iroller)
 * 0.7.3 (October 24, 2015)
     * Fix ipv6 support when using ip-version :both (#73 - chantra)
     * Avoid Lazy Defaults in LWRP Definitions to maintain compatibility with older Chef version
