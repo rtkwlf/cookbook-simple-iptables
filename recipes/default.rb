@@ -40,9 +40,9 @@ ruby_block "run-iptables-resources-early" do
     node.set["simple_iptables"]["ipv4"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
     node.set["simple_iptables"]["ipv4"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
 
-    node.set["simple_iptables"]["ipv6"]["chains"] = {"filter" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv6"]["rules"] = {"filter" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv6"]["policy"] = {"filter" => {}, "mangle" => {}, "raw" => {}}
+    node.set["simple_iptables"]["ipv6"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.set["simple_iptables"]["ipv6"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.set["simple_iptables"]["ipv6"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
     # Then run all the simple_iptables_* resources
     run_context.resource_collection.each do |resource|
       if resource.kind_of?(Chef::Resource::SimpleIptablesRule)
