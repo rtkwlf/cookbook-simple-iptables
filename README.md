@@ -387,6 +387,8 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.7.5 (June 27, 2016)
+    * Allow NAT for IPv6 (#79 - andrewheald)
 * 0.7.4 (January 25, 2016)
     * A `:default` parameter should not be specified on `:name_attribute` attributes (#78 - iroller)
 * 0.7.3 (October 24, 2015)
