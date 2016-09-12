@@ -36,13 +36,13 @@ ruby_block "run-iptables-resources-early" do
     # Before executing the simple_iptables_* resources, reset the
     # node attributes to their defaults. This gives "action :delete"
     # semantics for free by removing a resource from a recipe.
-    node.set["simple_iptables"]["ipv4"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv4"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv4"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
+    node.normal["simple_iptables"]["ipv4"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.normal["simple_iptables"]["ipv4"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.normal["simple_iptables"]["ipv4"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
 
-    node.set["simple_iptables"]["ipv6"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv6"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv6"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
+    node.normal["simple_iptables"]["ipv6"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.normal["simple_iptables"]["ipv6"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
+    node.normal["simple_iptables"]["ipv6"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
     # Then run all the simple_iptables_* resources
     run_context.resource_collection.each do |resource|
       if resource.kind_of?(Chef::Resource::SimpleIptablesRule)

@@ -26,9 +26,9 @@ def handle_rule(new_resource, ip_version)
     rules = ['']
   end
   if not node["simple_iptables"][ip_version]["chains"][new_resource.table].include?(new_resource.chain)
-    node.set["simple_iptables"][ip_version]["chains"][new_resource.table] = node["simple_iptables"][ip_version]["chains"][new_resource.table].dup << new_resource.chain unless ["PREROUTING", "INPUT", "FORWARD", "OUTPUT", "POSTROUTING"].include?(new_resource.chain)
+    node.normal["simple_iptables"][ip_version]["chains"][new_resource.table] = node["simple_iptables"][ip_version]["chains"][new_resource.table].dup << new_resource.chain unless ["PREROUTING", "INPUT", "FORWARD", "OUTPUT", "POSTROUTING"].include?(new_resource.chain)
     unless new_resource.chain == new_resource.direction || new_resource.direction == :none
-      node.set["simple_iptables"][ip_version]["rules"][new_resource.table] << {:rule => "-A #{new_resource.direction} #{new_resource.chain_condition} --jump #{new_resource.chain}", :weight => new_resource.weight}
+      node.normal["simple_iptables"][ip_version]["rules"][new_resource.table] << {:rule => "-A #{new_resource.direction} #{new_resource.chain_condition} --jump #{new_resource.chain}", :weight => new_resource.weight}
     end
   end
 
@@ -37,7 +37,7 @@ def handle_rule(new_resource, ip_version)
   rules.each do |rule|
     new_rule_string = rule_string(new_resource, rule, false)
     new_rule = {:rule => new_rule_string, :weight => new_resource.weight}
-    table_rules = node.set["simple_iptables"][ip_version]["rules"][new_resource.table]
+    table_rules = node.normal["simple_iptables"][ip_version]["rules"][new_resource.table]
 
     unless table_rules.include?(new_rule)
       table_rules << new_rule

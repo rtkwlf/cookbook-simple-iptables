@@ -1,4 +1,4 @@
-node.set["simple_iptables"]["ip_versions"] = ["ipv4", "ipv6"]
+node.normal["simple_iptables"]["ip_versions"] = ["ipv4", "ipv6"]
 
 include_recipe "simple_iptables::default"
 
