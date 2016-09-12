@@ -1,4 +1,4 @@
-node.set["simple_iptables"]["ipv4"]["tables"] = %w(filter mangle)
+node.normal["simple_iptables"]["ipv4"]["tables"] = %w(filter mangle)
 
 include_recipe "simple_iptables::default"
 

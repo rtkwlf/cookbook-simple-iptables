@@ -1,6 +1,6 @@
-node.set["simple_iptables"]["ip_versions"] = ["ipv4", "ipv6"]
-node.set["simple_iptables"]["ipv4"]["tables"] = %w(filter mangle)
-node.set["simple_iptables"]["ipv6"]["tables"] = %w(filter mangle)
+node.normal["simple_iptables"]["ip_versions"] = ["ipv4", "ipv6"]
+node.normal["simple_iptables"]["ipv4"]["tables"] = %w(filter mangle)
+node.normal["simple_iptables"]["ipv6"]["tables"] = %w(filter mangle)
 
 include_recipe "simple_iptables::default"
 

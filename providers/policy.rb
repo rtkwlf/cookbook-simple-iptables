@@ -11,6 +11,6 @@ end
 
 def handle_policy(new_resource, ip_version)
   Chef::Log.debug("[#{ip_version}] setting policy for #{new_resource.chain} to #{new_resource.policy}")
-  node.set["simple_iptables"][ip_version]["policy"][new_resource.table][new_resource.chain] = new_resource.policy
+  node.normal["simple_iptables"][ip_version]["policy"][new_resource.table][new_resource.chain] = new_resource.policy
   return true
 end
