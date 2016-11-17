@@ -25,36 +25,40 @@ def handle_rule(new_resource, ip_version)
   else
     rules = ['']
   end
-  if not node["simple_iptables"][ip_version]["chains"][new_resource.table].include?(new_resource.chain)
-    node.set["simple_iptables"][ip_version]["chains"][new_resource.table] = node["simple_iptables"][ip_version]["chains"][new_resource.table].dup << new_resource.chain unless ["PREROUTING", "INPUT", "FORWARD", "OUTPUT", "POSTROUTING"].include?(new_resource.chain)
+
+  unless node["simple_iptables"][ip_version]["rules"][new_resource.table].include?(new_resource.weight)
+    node.default["simple_iptables"][ip_version]["rules"][new_resource.table][new_resource.weight] = []
+  end
+  unless node["simple_iptables"][ip_version]["chains"][new_resource.table].include?(new_resource.chain)
+    unless ["PREROUTING", "INPUT", "FORWARD", "OUTPUT", "POSTROUTING"].include?(new_resource.chain)
+      node.default["simple_iptables"][ip_version]["chains"][new_resource.table] << new_resource.chain
+    end
     unless new_resource.chain == new_resource.direction || new_resource.direction == :none
-      node.set["simple_iptables"][ip_version]["rules"][new_resource.table] << {:rule => "-A #{new_resource.direction} #{new_resource.chain_condition} --jump #{new_resource.chain}", :weight => new_resource.weight}
+      node.default["simple_iptables"][ip_version]["rules"][new_resource.table][new_resource.weight] << "-A #{new_resource.direction} #{new_resource.chain_condition} --jump #{new_resource.chain}"
     end
   end
 
   # Then apply the rules to the node
   updated = false
   rules.each do |rule|
-    new_rule_string = rule_string(new_resource, rule, false)
-    new_rule = {:rule => new_rule_string, :weight => new_resource.weight}
-    table_rules = node.set["simple_iptables"][ip_version]["rules"][new_resource.table]
+    new_rule = rule_string(new_resource, rule, false)
+    table_rules = node.default["simple_iptables"][ip_version]["rules"][new_resource.table][new_resource.weight]
 
     unless table_rules.include?(new_rule)
       table_rules << new_rule
-      table_rules.sort! {|a,b| a[:weight] <=> b[:weight]}
       updated = true
-      Chef::Log.debug("[#{ip_version}] added rule '#{new_rule_string}'")
+      Chef::Log.debug("[#{ip_version}] added rule '#{new_rule}'")
     else
-      Chef::Log.debug("[#{ip_version}] ignoring duplicate simple_iptables_rule '#{new_rule_string}'")
+      Chef::Log.debug("[#{ip_version}] ignoring duplicate simple_iptables_rule '#{new_rule}'")
     end
   end
-  return updated
+  updated
 end
 
 def rule_string(new_resource, rule, include_table)
   jump = new_resource.jump ? "--jump #{new_resource.jump} " : ""
   table = include_table ? "--table #{new_resource.table} " : ""
-  comment = %Q{ -m comment --comment "#{new_resource.comment || new_resource.name}" }
+  comment = %Q{ -m comment --comment "#{new_resource.comment || new_resource.name}"}
   rule = "#{table}-A #{new_resource.chain} #{jump}#{rule}#{comment}"
   rule
 end

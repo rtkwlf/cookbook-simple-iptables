@@ -9,8 +9,10 @@
 <% node["simple_iptables"]["ipv6"]["chains"]["nat"].each do |chain| -%>
 :<%= chain %> - [0:0]
 <% end -%>
-<% node["simple_iptables"]["ipv6"]["rules"]["nat"].each do |rule| -%>
-<%= rule[:rule] %>
+<% node["simple_iptables"]["ipv6"]["rules"]["nat"].sort.each do |weight, rules| -%>
+<% rules.each do |rule| -%>
+<%= rule %>
+<% end -%>
 <% end -%>
 COMMIT
 # Completed
@@ -26,8 +28,10 @@ COMMIT
 <% node["simple_iptables"]["ipv6"]["chains"]["mangle"].each do |chain| -%>
 :<%= chain %> - [0:0]
 <% end -%>
-<% node["simple_iptables"]["ipv6"]["rules"]["mangle"].each do |rule| -%>
-<%= rule[:rule] %>
+<% node["simple_iptables"]["ipv6"]["rules"]["mangle"].sort.each do |weight, rules| -%>
+<% rules.each do |rule| -%>
+<%= rule %>
+<% end -%>
 <% end -%>
 COMMIT
 # Completed
@@ -41,8 +45,10 @@ COMMIT
 <% node["simple_iptables"]["ipv6"]["chains"]["filter"].each do |chain| -%>
 :<%= chain %> - [0:0]
 <% end -%>
-<% node["simple_iptables"]["ipv6"]["rules"]["filter"].each do |rule| -%>
-<%= rule[:rule] %>
+<% node["simple_iptables"]["ipv6"]["rules"]["filter"].sort.each do |weight, rules| -%>
+<% rules.each do |rule| -%>
+<%= rule %>
+<% end -%>
 <% end -%>
 COMMIT
 # Completed
@@ -55,8 +61,10 @@ COMMIT
 <% node["simple_iptables"]["ipv6"]["chains"]["raw"].each do |chain| -%>
 :<%= chain %> - [0:0]
 <% end -%>
-<% node["simple_iptables"]["ipv6"]["rules"]["raw"].each do |rule| -%>
-<%= rule[:rule] %>
+<% node["simple_iptables"]["ipv6"]["rules"]["raw"].sort.each do |weight, rules| -%>
+<% rules.each do |rule| -%>
+<%= rule %>
+<% end -%>
 <% end -%>
 COMMIT
 # Completed

@@ -33,16 +33,9 @@ package "iptables"
 # better way to do this, please let me know!
 ruby_block "run-iptables-resources-early" do
   block do
-    # Before executing the simple_iptables_* resources, reset the
-    # node attributes to their defaults. This gives "action :delete"
-    # semantics for free by removing a resource from a recipe.
-    node.set["simple_iptables"]["ipv4"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv4"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv4"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
-
-    node.set["simple_iptables"]["ipv6"]["chains"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv6"]["rules"] = {"filter" => [], "nat" => [], "mangle" => [], "raw" => []}
-    node.set["simple_iptables"]["ipv6"]["policy"] = {"filter" => {}, "nat" => {}, "mangle" => {}, "raw" => {}}
+    # Clear old normal-level attributes set by previous versions of the cookbook
+    node.rm_normal("simple_iptables", "ipv4")
+    node.rm_normal("simple_iptables", "ipv6")
     # Then run all the simple_iptables_* resources
     run_context.resource_collection.each do |resource|
       if resource.kind_of?(Chef::Resource::SimpleIptablesRule)
@@ -54,7 +47,7 @@ ruby_block "run-iptables-resources-early" do
       end
     end
 
-    Chef::Log.debug("After run-iptables-resources-early data is: #{node['simple_iptables'].inspect}")
+    Chef::Log.debug("After run-iptables-resources-early data is: #{node['simple_iptables']}")
   end
 end
 
@@ -137,4 +130,3 @@ eos
     end
   end
 end
-
