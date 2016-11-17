@@ -387,6 +387,9 @@ Which results in the following iptables configuration:
 
 Changes
 =======
+* 0.8.0 (November 17, 2016)
+    * Order of rules with the same weight reflects the order of the resources in a recipe
+    * Switch to default attributes from normal attributes
 * 0.7.5 (June 27, 2016)
     * Allow NAT for IPv6 (#79 - andrewheald)
 * 0.7.4 (January 25, 2016)
