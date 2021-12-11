@@ -4,10 +4,14 @@ driver:
 
 provisioner:
   name: chef_zero
+  require_chef_omnibus: '12'
+  deprecations_as_errors: true
+  client_rb:
+    chef_license: accept
   data_path: test/shared
 
 platforms:
-  - name: centos-6.5
+  - name: centos-7
 
 suites:
   - name: default
