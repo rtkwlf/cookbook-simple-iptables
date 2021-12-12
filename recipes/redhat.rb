@@ -38,7 +38,7 @@ simple_iptables_rule "ssh" do
   ip_version :ipv4
 end
 
-simple_iptables_rule "reject" do
+simple_iptables_rule "reject_input" do
   chain "INPUT"
   rule ""
   jump "REJECT --reject-with icmp-host-prohibited"
@@ -46,7 +46,7 @@ simple_iptables_rule "reject" do
   ip_version :ipv4
 end
 
-simple_iptables_rule "reject" do
+simple_iptables_rule "reject_forward" do
   direction "FORWARD"
   chain "FORWARD"
   rule ""
